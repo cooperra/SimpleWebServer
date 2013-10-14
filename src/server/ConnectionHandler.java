@@ -103,8 +103,9 @@ public class ConnectionHandler implements Runnable {
 			int status = pe.getStatus();
 			if(status == Protocol.BAD_REQUEST_CODE) {
 				response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
+			} else if (status == Protocol.NOT_SUPPORTED_CODE) {
+				response = HttpResponseFactory.create501NotImplemented(Protocol.CLOSE);
 			}
-			// TODO: Handle version not supported code as well
 		}
 		catch(Exception e) {
 			e.printStackTrace();

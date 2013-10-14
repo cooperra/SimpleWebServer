@@ -145,4 +145,15 @@ public class HttpResponseFactory {
 		// TODO fill in this method
 		return null;
 	}
+
+	/**
+	 * Creates a {@link HttpResponse} object for sending version not implemented response.
+	 * 
+	 * @param connection Supported values are {@link Protocol#OPEN} and {@link Protocol#CLOSE}.
+	 * @return A {@link HttpResponse} object represent 501 status.
+	 */
+	public static HttpResponse create501NotImplemented(String connection) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
