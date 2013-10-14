@@ -25,6 +25,7 @@ package protocol;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,7 @@ import java.util.StringTokenizer;
  * @author Chandan R. Rupakheti (rupakhet@rose-hulman.edu)
  */
 public class HttpRequest {
+	private static final String[] SUPPORTED_METHODS = {"GET"};
 	private String method;
 	private String uri;
 	private String version;
@@ -115,6 +117,10 @@ public class HttpRequest {
 		request.method = tokenizer.nextToken();		// GET
 		request.uri = tokenizer.nextToken();		// /somedir/page.html
 		request.version = tokenizer.nextToken();	// HTTP/1.1
+		
+		if (!Arrays.asList(SUPPORTED_METHODS).contains(request.method)) {
+			throw new ProtocolException(Protocol.NOT_IMPLEMENTED_CODE, Protocol.NOT_IMPLEMENTED_TEXT);
+		}
 		
 		// Rest of the request is a header that maps keys to values
 		// e.g. Host: www.rose-hulman.edu

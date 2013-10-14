@@ -100,10 +100,11 @@ public class ConnectionHandler implements Runnable {
 			// We have some sort of protocol exception. Get its status code and create response
 			// We know only two kind of exception is possible inside fromInputStream
 			// Protocol.BAD_REQUEST_CODE and Protocol.NOT_SUPPORTED_CODE
+			// Protocol.NOT_IMPLEMENTED_CODE
 			int status = pe.getStatus();
 			if(status == Protocol.BAD_REQUEST_CODE) {
 				response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
-			} else if (status == Protocol.NOT_SUPPORTED_CODE) {
+			} else if (status == Protocol.NOT_IMPLEMENTED_CODE) {
 				response = HttpResponseFactory.create501NotImplemented(Protocol.CLOSE);
 			}
 		}

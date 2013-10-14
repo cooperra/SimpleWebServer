@@ -153,7 +153,12 @@ public class HttpResponseFactory {
 	 * @return A {@link HttpResponse} object represent 501 status.
 	 */
 	public static HttpResponse create501NotImplemented(String connection) {
-		// TODO Auto-generated method stub
-		return null;
+		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.NOT_IMPLEMENTED_CODE, 
+				Protocol.NOT_IMPLEMENTED_TEXT, new HashMap<String, String>(), null);
+		
+		// Lets fill up header fields with more information
+		fillGeneralHeader(response, connection);
+		
+		return response;
 	}
 }
