@@ -64,8 +64,17 @@ public class HttpResponseFactory {
 	 * @return A {@link HttpResponse} object represent 200 status.
 	 */
 	public static HttpResponse create200OK(File file, String connection) {
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 
-				Protocol.OK_TEXT, new HashMap<String, String>(), file);
+		return create200OK(file, connection, false);
+	}
+	public static HttpResponse create200OK(File file, String connection, boolean isHead) {
+		HttpResponse response;
+		if (isHead) {
+			response = new HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 
+				Protocol.OK_TEXT, new HashMap<String, String>(), null);
+		} else {
+			response = new HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 
+					Protocol.OK_TEXT, new HashMap<String, String>(), file);
+		}
 		
 		// Lets fill up header fields with more information
 		fillGeneralHeader(response, connection);
