@@ -37,14 +37,17 @@ import java.util.StringTokenizer;
  * @author Chandan R. Rupakheti (rupakhet@rose-hulman.edu)
  */
 public class HttpRequest {
-	private static final String[] SUPPORTED_METHODS = {"GET"};
+	private static final String[] SUPPORTED_METHODS = {"GET","POST","HEAD","PUT","DELETE"};
+	private static final String[] BODY_METHODS = {"POST","PUT"};
 	private String method;
 	private String uri;
 	private String version;
 	private Map<String, String> header;
+	private String body;
 	
 	private HttpRequest() {
 		this.header = new HashMap<String, String>();
+		this.body = "";
 	}
 	
 	/**
@@ -81,6 +84,14 @@ public class HttpRequest {
 	public Map<String, String> getHeader() {
 		// Lets return the unmodifable view of the header map
 		return Collections.unmodifiableMap(header);
+	}
+	
+	/**
+	 * The body of the http request.
+	 * @return the body
+	 */
+	public String getBody() {
+		return body;
 	}
 
 	/**
@@ -159,6 +170,29 @@ public class HttpRequest {
 			// Processed one more line, now lets read another header line and loop
 			line = reader.readLine().trim();
 		}
+		
+		// process body
+		if (Arrays.asList(BODY_METHODS).contains(request.method)) {
+			int contentLen;
+			try {
+				String contentLenStr = request.header.get("content-length");
+				if (contentLenStr == null) {
+					// TODO: change to length required error code
+					throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
+				}
+				contentLen = Integer.parseInt(contentLenStr);
+			} catch (NumberFormatException e) {
+				throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
+			}
+			
+			StringBuilder bodybuilder = new StringBuilder();
+			for (int i = 0; i < contentLen; i++) {
+				char c = (char) reader.read();
+				bodybuilder.append(c);
+			}
+			request.body = bodybuilder.toString();
+		}
+		
 		return request;
 	}
 	
