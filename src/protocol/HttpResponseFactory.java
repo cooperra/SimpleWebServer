@@ -63,10 +63,13 @@ public class HttpResponseFactory {
 	 * @param connection Supported values are {@link Protocol#OPEN} and {@link Protocol#CLOSE}.
 	 * @return A {@link HttpResponse} object represent 200 status.
 	 */
-	public static HttpResponse create200OK(File file, String connection) {
-		return create200OK(file, connection, false);
+	public static HttpResponse createGET200OK(File file, String connection) {
+		return createGETHEAD200OK(file, connection, false);
 	}
-	public static HttpResponse create200OK(File file, String connection, boolean isHead) {
+	public static HttpResponse createHEAD200OK(File file, String connection) {
+		return createGETHEAD200OK(file, connection, true);
+	}
+	public static HttpResponse createGETHEAD200OK(File file, String connection, boolean isHead) {
 		HttpResponse response;
 		if (isHead) {
 			response = new HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 

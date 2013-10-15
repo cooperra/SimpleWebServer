@@ -163,7 +163,7 @@ public class ConnectionHandler implements Runnable {
 						file = new File(location);
 						if(file.exists()) {
 							// Lets create 200 OK response
-							response = HttpResponseFactory.create200OK(file, Protocol.CLOSE);
+							response = HttpResponseFactory.createGET200OK(file, Protocol.CLOSE);
 						}
 						else {
 							// File does not exist so lets create 404 file not found code
@@ -172,7 +172,7 @@ public class ConnectionHandler implements Runnable {
 					}
 					else { // Its a file
 						// Lets create 200 OK response
-						response = HttpResponseFactory.create200OK(file, Protocol.CLOSE);
+						response = HttpResponseFactory.createGET200OK(file, Protocol.CLOSE);
 					}
 				}
 				else {
@@ -184,7 +184,7 @@ public class ConnectionHandler implements Runnable {
 //				String date = header.get("if-modified-since");
 //				String hostName = header.get("host");
 //				
-				// Handling GET request here
+				// Handling HEAD request here
 				// Get relative URI path from request
 				String uri = request.getUri();
 				// Get root directory path from server
@@ -199,7 +199,7 @@ public class ConnectionHandler implements Runnable {
 						file = new File(location);
 						if(file.exists()) {
 							// Lets create 200 OK response
-							response = HttpResponseFactory.create200OK(file, Protocol.CLOSE, true);
+							response = HttpResponseFactory.createHEAD200OK(file, Protocol.CLOSE);
 						}
 						else {
 							// File does not exist so lets create 404 file not found code
@@ -208,7 +208,7 @@ public class ConnectionHandler implements Runnable {
 					}
 					else { // Its a file
 						// Lets create 200 OK response
-						response = HttpResponseFactory.create200OK(file, Protocol.CLOSE, true);
+						response = HttpResponseFactory.createHEAD200OK(file, Protocol.CLOSE);
 					}
 				}
 				else {
