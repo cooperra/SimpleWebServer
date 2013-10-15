@@ -141,7 +141,7 @@ public class ConnectionHandler implements Runnable {
 			if(!request.getVersion().equalsIgnoreCase(Protocol.VERSION)) {
 				// Here you checked that the "Protocol.VERSION" string is not equal to the  
 				// "request.version" string ignoring the case of the letters in both strings
-				// TODO: Fill in the rest of the code here
+				response = HttpResponseFactory.create505NotSupported(Protocol.CLOSE);
 			}
 			else if(request.getMethod().equalsIgnoreCase(Protocol.GET)) {
 //				Map<String, String> header = request.getHeader();
