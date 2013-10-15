@@ -112,6 +112,8 @@ public class ConnectionHandler implements Runnable {
 				response = HttpResponseFactory.create400BadRequest(Protocol.CLOSE);
 			} else if (status == Protocol.NOT_IMPLEMENTED_CODE) {
 				response = HttpResponseFactory.create501NotImplemented(Protocol.CLOSE);
+			} else if (status == Protocol.LENGTH_REQUIRED_CODE) {
+				response = HttpResponseFactory.create411LengthRequired(Protocol.CLOSE);
 			}
 		}
 		catch(Exception e) {

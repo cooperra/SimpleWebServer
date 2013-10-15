@@ -177,8 +177,8 @@ public class HttpRequest {
 			try {
 				String contentLenStr = request.header.get("content-length");
 				if (contentLenStr == null) {
-					// TODO: change to length required error code
-					throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
+					// use length required response code
+					throw new ProtocolException(Protocol.LENGTH_REQUIRED_CODE, Protocol.LENGTH_REQUIRED_TEXT);
 				}
 				contentLen = Integer.parseInt(contentLenStr);
 			} catch (NumberFormatException e) {

@@ -63,6 +63,9 @@ public class Protocol {
     public static final int NOT_FOUND_CODE = 404;
     public static final String NOT_FOUND_TEXT = "Not Found";
     
+    public static final int LENGTH_REQUIRED_CODE = 411;
+    public static final String LENGTH_REQUIRED_TEXT = "Length Required";
+    
 	public static final int INTERNAL_SERVER_ERROR_CODE = 500;
 	public static final String INTERNAL_SERVER_ERROR_TEXT = "Internal Server Error";
     
