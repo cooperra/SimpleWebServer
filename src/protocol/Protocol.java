@@ -48,6 +48,9 @@ public class Protocol {
     public static final int OK_CODE = 200;
     public static final String OK_TEXT = "OK";
     
+	public static final int NO_CONTENT_CODE = 204;
+    public static final String NO_CONTENT_TEXT = "No Content";
+    
     public static final int MOVED_PERMANENTLY_CODE = 301;
     public static final String MOVED_PERMANENTLY_TEXT = "Moved Permanently";
     
@@ -56,6 +59,9 @@ public class Protocol {
     
     public static final int NOT_FOUND_CODE = 404;
     public static final String NOT_FOUND_TEXT = "Not Found";
+    
+	public static final int INTERNAL_SERVER_ERROR_CODE = 500;
+	public static final String INTERNAL_SERVER_ERROR_TEXT = "Internal Server Error";
     
     public static final int NOT_SUPPORTED_CODE = 505;
     public static final String NOT_SUPPORTED_TEXT = "HTTP Version Not Supported";

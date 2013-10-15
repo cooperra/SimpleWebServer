@@ -69,7 +69,7 @@ public class HttpResponseFactory {
 	public static HttpResponse createHEAD200OK(File file, String connection) {
 		return createGETHEAD200OK(file, connection, true);
 	}
-	public static HttpResponse createGETHEAD200OK(File file, String connection, boolean isHead) {
+	private static HttpResponse createGETHEAD200OK(File file, String connection, boolean isHead) {
 		HttpResponse response;
 		if (isHead) {
 			response = new HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 
@@ -100,6 +100,16 @@ public class HttpResponseFactory {
 		if(mime != null) { 
 			response.put(Protocol.CONTENT_TYPE, mime);
 		}
+		
+		return response;
+	}
+	
+	public static HttpResponse create204NoContent(String connection) {
+		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.NO_CONTENT_CODE, 
+				Protocol.NO_CONTENT_TEXT, new HashMap<String, String>(), null);
+		
+		// Lets fill up header fields with more information
+		fillGeneralHeader(response, connection);
 		
 		return response;
 	}
@@ -167,6 +177,22 @@ public class HttpResponseFactory {
 	public static HttpResponse create501NotImplemented(String connection) {
 		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.NOT_IMPLEMENTED_CODE, 
 				Protocol.NOT_IMPLEMENTED_TEXT, new HashMap<String, String>(), null);
+		
+		// Lets fill up header fields with more information
+		fillGeneralHeader(response, connection);
+		
+		return response;
+	}
+
+	/**
+	 * Creates a {@link HttpResponse} object for sending version not implemented response.
+	 * 
+	 * @param connection Supported values are {@link Protocol#OPEN} and {@link Protocol#CLOSE}.
+	 * @return A {@link HttpResponse} object represent 501 status.
+	 */
+	public static HttpResponse create500InternalServerError(String connection) {
+		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.INTERNAL_SERVER_ERROR_CODE, 
+				Protocol.INTERNAL_SERVER_ERROR_TEXT, new HashMap<String, String>(), null);
 		
 		// Lets fill up header fields with more information
 		fillGeneralHeader(response, connection);

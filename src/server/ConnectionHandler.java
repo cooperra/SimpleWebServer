@@ -21,7 +21,10 @@
  
 package server;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -214,6 +217,36 @@ public class ConnectionHandler implements Runnable {
 				else {
 					// File does not exist so lets create 404 file not found code
 					response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+				}
+			} else if (request.getMethod().equalsIgnoreCase(Protocol.PUT)) {
+				// Handling PUT request here
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				File file = new File(rootDirectory + uri);
+				
+				if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
+					BufferedWriter writer = null;
+					try {
+						writer = new BufferedWriter( new FileWriter(file));
+						writer.write( request.getBody());
+					} catch (IOException e) {
+						response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+					} finally {
+						if (writer != null) {
+							writer.close();
+						}
+					}
+				} else {
+					response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+				}
+				
+				// if nothing has gone wrong so far... 
+				if (response == null) {
+					// Lets create 204 No Content response
+					response = HttpResponseFactory.create204NoContent(Protocol.CLOSE);
 				}
 			}
 		}
