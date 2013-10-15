@@ -296,6 +296,28 @@ public class ConnectionHandler implements Runnable {
 					// Lets create 201 Created response
 					response = HttpResponseFactory.create201Created(uri, Protocol.CLOSE);
 				}
+			} else if (request.getMethod().equalsIgnoreCase(Protocol.DELETE)) {
+				// Handling DELETE request here
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				File file = new File(rootDirectory + uri);
+				
+				if (file.exists()) {
+					if (!file.delete()) {
+						response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+					}
+				} else {
+					response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+				}
+				
+				// if nothing has gone wrong so far... 
+				if (response == null) {
+					// Lets create 201 Created response
+					response = HttpResponseFactory.create204NoContent(Protocol.CLOSE);
+				}
 			}
 		}
 		catch(Exception e) {
