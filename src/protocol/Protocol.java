@@ -48,6 +48,9 @@ public class Protocol {
     public static final int OK_CODE = 200;
     public static final String OK_TEXT = "OK";
     
+    public static final int CREATED_CODE = 201;
+    public static final String CREATED_TEXT = "Created";
+    
 	public static final int NO_CONTENT_CODE = 204;
     public static final String NO_CONTENT_TEXT = "No Content";
     

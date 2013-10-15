@@ -104,6 +104,21 @@ public class HttpResponseFactory {
 		return response;
 	}
 	
+	public static HttpResponse create201Created(String location, String connection) {
+		HashMap<String, String> header = new HashMap<String, String>();
+		if (location != null) {
+			header.put("Location", location);
+		}
+		
+		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.CREATED_CODE, 
+				Protocol.CREATED_TEXT, header, null);
+		
+		// Lets fill up header fields with more information
+		fillGeneralHeader(response, connection);
+		
+		return response;
+	}
+	
 	public static HttpResponse create204NoContent(String connection) {
 		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.NO_CONTENT_CODE, 
 				Protocol.NO_CONTENT_TEXT, new HashMap<String, String>(), null);

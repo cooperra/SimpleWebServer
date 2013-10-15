@@ -24,10 +24,13 @@ package server;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.sql.Time;
+import java.util.Date;
 import java.util.Map;
 
 import protocol.HttpRequest;
@@ -227,6 +230,11 @@ public class ConnectionHandler implements Runnable {
 				// Combine them together to form absolute file path
 				File file = new File(rootDirectory + uri);
 				
+				boolean preexists = false;
+				if (file.exists()) {
+					preexists = true;
+				}
+				
 				if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
 					BufferedWriter writer = null;
 					try {
@@ -245,8 +253,48 @@ public class ConnectionHandler implements Runnable {
 				
 				// if nothing has gone wrong so far... 
 				if (response == null) {
-					// Lets create 204 No Content response
-					response = HttpResponseFactory.create204NoContent(Protocol.CLOSE);
+					if (preexists) {
+						// Lets create 204 No Content response
+						response = HttpResponseFactory.create204NoContent(Protocol.CLOSE);
+					} else {
+						// Lets create 201 Created response
+						response = HttpResponseFactory.create201Created(null, Protocol.CLOSE);
+					}
+				}
+			} else if (request.getMethod().equalsIgnoreCase(Protocol.POST)) {
+				// Handling POST request here
+				// Treating like PUT, URI is parent directory and must exist
+				// Server chooses filename
+				
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				// add time to URI
+				uri += new Date().getTime();
+				File file = new File(rootDirectory + uri);
+				
+				if (file.getParentFile().exists() && file.getParentFile().isDirectory()) {
+					BufferedWriter writer = null;
+					try {
+						writer = new BufferedWriter( new FileWriter(file));
+						writer.write( request.getBody());
+					} catch (IOException e) {
+						response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+					} finally {
+						if (writer != null) {
+							writer.close();
+						}
+					}
+				} else {
+					response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+				}
+				
+				// if nothing has gone wrong so far... 
+				if (response == null) {
+					// Lets create 201 Created response
+					response = HttpResponseFactory.create201Created(uri, Protocol.CLOSE);
 				}
 			}
 		}
