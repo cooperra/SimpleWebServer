@@ -179,7 +179,7 @@ public class ConnectionHandler implements Runnable {
 					// File does not exist so lets create 404 file not found code
 					response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
 				}
-			} if (request.getMethod().equalsIgnoreCase(Protocol.HEAD)) {
+			} else if (request.getMethod().equalsIgnoreCase(Protocol.HEAD)) {
 //				Map<String, String> header = request.getHeader();
 //				String date = header.get("if-modified-since");
 //				String hostName = header.get("host");
