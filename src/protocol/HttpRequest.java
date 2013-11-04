@@ -46,6 +46,7 @@ public abstract class HttpRequest {
 	}
 	
 	protected HttpRequest(BufferedReader reader, String uri, String version) throws ProtocolException {
+		this();
 		this.uri = uri;
 		this.version = version;
 		this.readHeader(reader);
