@@ -2,12 +2,12 @@ package server;
 
 public class ServletList {
 	
-	private ArrayList<>
+	//private ArrayList<>
 	
 	
-	public ServletList(){
+	//public ServletList(){
 		
 		
-	}
+	//}
 
 }
