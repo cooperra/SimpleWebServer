@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -184,8 +185,12 @@ public class WebServer extends JFrame {
 				// Get hold of the root directory
 				String rootDirectory = WebServer.this.txtRootDirectory.getText();
 				
-				// Now run the server in non-gui thread
-				server = new Server(rootDirectory, port, WebServer.this);
+				try {
+					server = new Server(rootDirectory, port, WebServer.this);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				rateUpdater = new ServiceRateUpdater();
 				
 				// Disable widgets

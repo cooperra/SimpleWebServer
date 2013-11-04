@@ -1,6 +1,8 @@
 package server;
 
 
+
+
 import java.nio.file.*;
 import java.nio.file.*;
 
@@ -18,6 +20,7 @@ public class DirectoryWatcher {
     private final boolean recursive;
     private boolean trace = false;
     private static Path dir;
+    private ServletLoader SvLd;
     
     
     @SuppressWarnings("unchecked")
@@ -26,10 +29,11 @@ public class DirectoryWatcher {
     }
     
     
-    public DirectoryWatcher(Path dir, boolean recursive) throws IOException{
+    public DirectoryWatcher(Path dir, boolean recursive, ServletLoader sv) throws IOException{
     	 this.watcher = FileSystems.getDefault().newWatchService();
          this.keys = new HashMap<WatchKey,Path>();
          this.recursive = recursive;
+         this.SvLd =sv;
 
          
          if (recursive) {
@@ -105,9 +109,13 @@ public class DirectoryWatcher {
             	
             	
             	if (kind == ENTRY_CREATE){
-            		
-            		//send the file to Servlet Loader
-            		
+            		Path child = dir.resolve(filename);
+            		try {
+						this.SvLd.LoadServlet(child.getFileName().toString());
+					} catch (ClassNotFoundException e) {
+						continue;
+					}
+            	
             	}
             	else if (kind == ENTRY_MODIFY){
             		
@@ -130,4 +138,5 @@ public class DirectoryWatcher {
     
         }
     }
+
 }

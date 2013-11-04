@@ -9,5 +9,8 @@ public interface ServletInterface {
 
 	public HttpResponse makeResponse(HttpRequest request,
 			HttpResponse response, String rootDirectory, File file);
+	
+	
+	public String getname(); //returns the name of the servlet
 
 }

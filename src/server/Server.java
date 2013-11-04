@@ -23,6 +23,7 @@ package server;
 
 import gui.WebServer;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -51,11 +52,14 @@ public class Server implements Runnable {
 	private HashMap<InetAddress,Integer> ipAddressLog = new HashMap<InetAddress,Integer>();
 	private ArrayList<Long> timeQueue = new ArrayList<Long>();
 	private ArrayList<InetAddress> banList = new ArrayList<InetAddress>();
+	private ServletList sl;
+	private ServletLoader svld;
 	/**
 	 * @param rootDirectory
 	 * @param port
+	 * @throws IOException 
 	 */
-	public Server(String rootDirectory, int port, WebServer window) {
+	public Server(String rootDirectory, int port, WebServer window) throws IOException {
 		this.rootDirectory = rootDirectory;
 		this.port = port;
 		this.stop = false;
@@ -64,6 +68,10 @@ public class Server implements Runnable {
 		this.window = window;
 		this.ipAddressQueue = new ArrayList<InetAddress>();
 		this.ipAddressLog = new HashMap<InetAddress,Integer>();
+		this.sl = new ServletList();
+		
+		this.svld = new ServletLoader(sl);
+		new Thread(svld).start();
 	}
 
 	/**

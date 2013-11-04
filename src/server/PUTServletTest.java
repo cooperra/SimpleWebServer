@@ -59,5 +59,11 @@ public class PUTServletTest implements ServletInterface{
 		}
 		return response;
 	}
+
+	@Override
+	public String getname() {
+		// TODO Auto-generated method stub
+		return "PUTServletTest";
+	}
 	
 }

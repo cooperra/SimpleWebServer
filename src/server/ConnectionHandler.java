@@ -143,17 +143,6 @@ public class ConnectionHandler implements Runnable {
 		}
 		
 		// We reached here means no error so far, so lets process further
-		
-		// Get relative URI path from request
-		String uri = request.getUri();
-		// Get root directory path from server
-		String rootDirectory = server.getRootDirectory();
-		// Combine them together to form absolute file path
-		File file = new File(rootDirectory + uri);
-		// Add a version with a time mark for cases where it's needed.
-		uri += new Date().getTime();
-		File timeMarkedFile = new File(rootDirectory + uri);
-		
 		try {
 			// Fill in the code to create a response for version mismatch.
 			// You may want to use constants such as Protocol.VERSION, Protocol.NOT_SUPPORTED_CODE, and more.
@@ -164,24 +153,174 @@ public class ConnectionHandler implements Runnable {
 				response = HttpResponseFactory.create505NotSupported(Protocol.CLOSE);
 			}
 			else if(request.getMethod().equalsIgnoreCase(Protocol.GET)) {
-				GETServletTest servlet = new GETServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, timeMarkedFile);
-				
+//				Map<String, String> header = request.getHeader();
+//				String date = header.get("if-modified-since");
+//				String hostName = header.get("host");
+//				
+				// Handling GET request here
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				File file = new File(rootDirectory + uri);
+				// Check if the file exists
+				if(file.exists()) {
+					if(file.isDirectory()) {
+						// Look for default index.html file in a directory
+						String location = rootDirectory + uri + System.getProperty("file.separator") + Protocol.DEFAULT_FILE;
+						file = new File(location);
+						if(file.exists()) {
+							// Lets create 200 OK response
+							response = HttpResponseFactory.createGET200OK(file, Protocol.CLOSE);
+						}
+						else {
+							// File does not exist so lets create 404 file not found code
+							response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+						}
+					}
+					else { // Its a file
+						// Lets create 200 OK response
+						response = HttpResponseFactory.createGET200OK(file, Protocol.CLOSE);
+					}
+				}
+				else {
+					// File does not exist so lets create 404 file not found code
+					response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+				}
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.HEAD)) {
-				HEADServletTest servlet = new HEADServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
-				
+//				Map<String, String> header = request.getHeader();
+//				String date = header.get("if-modified-since");
+//				String hostName = header.get("host");
+//				
+				// Handling HEAD request here
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				File file = new File(rootDirectory + uri);
+				// Check if the file exists
+				if(file.exists()) {
+					if(file.isDirectory()) {
+						// Look for default index.html file in a directory
+						String location = rootDirectory + uri + System.getProperty("file.separator") + Protocol.DEFAULT_FILE;
+						file = new File(location);
+						if(file.exists()) {
+							// Lets create 200 OK response
+							response = HttpResponseFactory.createHEAD200OK(file, Protocol.CLOSE);
+						}
+						else {
+							// File does not exist so lets create 404 file not found code
+							response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+						}
+					}
+					else { // Its a file
+						// Lets create 200 OK response
+						response = HttpResponseFactory.createHEAD200OK(file, Protocol.CLOSE);
+					}
+				}
+				else {
+					// File does not exist so lets create 404 file not found code
+					response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+				}
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.PUT)) {
-				PUTServletTest servlet = new PUTServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
+				// Handling PUT request here
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				File file = new File(rootDirectory + uri);
 				
+				boolean preexists = false;
+				if (file.exists()) {
+					preexists = true;
+				}
+				
+				if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
+					BufferedWriter writer = null;
+					try {
+						writer = new BufferedWriter( new FileWriter(file));
+						writer.write( request.getBody());
+					} catch (IOException e) {
+						response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+					} finally {
+						if (writer != null) {
+							writer.close();
+						}
+					}
+				} else {
+					response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+				}
+				
+				// if nothing has gone wrong so far... 
+				if (response == null) {
+					if (preexists) {
+						// Lets create 204 No Content response
+						response = HttpResponseFactory.create204NoContent(Protocol.CLOSE);
+					} else {
+						// Lets create 201 Created response
+						response = HttpResponseFactory.create201Created(null, Protocol.CLOSE);
+					}
+				}
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.POST)) {
-				POSTServletTest servlet = new POSTServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
+				// Handling POST request here
+				// Treating like PUT, URI is parent directory and must exist
+				// Server chooses filename
 				
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				// add time to URI
+				uri += new Date().getTime();
+				File file = new File(rootDirectory + uri);
+				
+				if (file.getParentFile().exists() && file.getParentFile().isDirectory()) {
+					BufferedWriter writer = null;
+					try {
+						writer = new BufferedWriter( new FileWriter(file));
+						writer.write( request.getBody());
+					} catch (IOException e) {
+						response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+					} finally {
+						if (writer != null) {
+							writer.close();
+						}
+					}
+				} else {
+					response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+				}
+				
+				// if nothing has gone wrong so far... 
+				if (response == null) {
+					// Lets create 201 Created response
+					response = HttpResponseFactory.create201Created(uri, Protocol.CLOSE);
+				}
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.DELETE)) {
-				DELETEServletTest servlet = new DELETEServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
+				// Handling DELETE request here
+				// Get relative URI path from request
+				String uri = request.getUri();
+				// Get root directory path from server
+				String rootDirectory = server.getRootDirectory();
+				// Combine them together to form absolute file path
+				File file = new File(rootDirectory + uri);
+				
+				if (file.exists()) {
+					if (!file.delete()) {
+						response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+					}
+				} else {
+					response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+				}
+				
+				// if nothing has gone wrong so far... 
+				if (response == null) {
+					// Lets create 201 Created response
+					response = HttpResponseFactory.create204NoContent(Protocol.CLOSE);
+				}
 			}
 		}
 		catch(Exception e) {
@@ -213,6 +352,4 @@ public class ConnectionHandler implements Runnable {
 		long end = System.currentTimeMillis();
 		this.server.incrementServiceTime(end-start);
 	}
-
-
 }
