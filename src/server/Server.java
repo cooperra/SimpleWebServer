@@ -37,7 +37,9 @@ import java.util.HashMap;
  * @author Chandan R. Rupakheti (rupakhet@rose-hulman.edu)
  */
 public class Server implements Runnable {
-	private final long dosAttackTimeMeasure = 500000000;
+	private final long dosAttackTimeMeasure = 900000000;
+	
+											  
 	private String rootDirectory;
 	private int port;
 	private boolean stop;
@@ -132,21 +134,23 @@ public class Server implements Runnable {
 			while(true) {
 				// Listen for incoming socket connection
 				// This method block until somebody makes a request
-				Socket connectionSocket = this.welcomeSocket.accept();
 				
+				Socket connectionSocket = this.welcomeSocket.accept();
 				if(banList.contains(connectionSocket.getInetAddress())){
 					break;
+				}else{
+					
+					addItemToIPAddressQueue(connectionSocket.getInetAddress());
+					
+					
+					// Come out of the loop if the stop flag is set
+					if(this.stop)
+						break;
+					
+					// Create a handler for this incoming connection and start the handler in a new thread
+					ConnectionHandler handler = new ConnectionHandler(this, connectionSocket);
+					new Thread(handler).start();
 				}
-				
-				addItemToIPAddressQueue(connectionSocket.getInetAddress());
-				
-				// Come out of the loop if the stop flag is set
-				if(this.stop)
-					break;
-				
-				// Create a handler for this incoming connection and start the handler in a new thread
-				ConnectionHandler handler = new ConnectionHandler(this, connectionSocket);
-				new Thread(handler).start();
 			}
 			this.welcomeSocket.close();
 		}
@@ -202,10 +206,12 @@ public class Server implements Runnable {
 		//we've logged it
 		if(ipAddressLog.containsKey(address)){
 			int i = ipAddressLog.get(address);
-			ipAddressLog.put(address, i++);
+			i = i + 1;
+			ipAddressLog.put(address, i);
+
 		}else{
 			ipAddressLog.put(address, 1);
-		}
+		}		
 		
 		//The queue will handle up to 200 items
 		if(ipAddressQueue.size()>200){
@@ -225,9 +231,10 @@ public class Server implements Runnable {
 			}
 			
 			//Checks now if there is a DoS attack.
-			if(currentTime - tempTime < dosAttackTimeMeasure &&
-					ipAddressLog.get(address) > 100){
-								banList.add(address);
+			
+			if(ipAddressLog.get(address) > 50 &&
+					currentTime - tempTime < dosAttackTimeMeasure){
+				banList.add(address);
 			}
 		}
 	}
