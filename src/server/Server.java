@@ -23,9 +23,12 @@ package server;
 
 import gui.WebServer;
 
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This represents a welcoming server for the incoming
@@ -34,6 +37,7 @@ import java.net.Socket;
  * @author Chandan R. Rupakheti (rupakhet@rose-hulman.edu)
  */
 public class Server implements Runnable {
+	private final long dosAttackTimeMeasure = 500000000;
 	private String rootDirectory;
 	private int port;
 	private boolean stop;
@@ -43,6 +47,10 @@ public class Server implements Runnable {
 	private long serviceTime;
 	
 	private WebServer window;
+	private ArrayList<InetAddress> ipAddressQueue = new ArrayList<InetAddress>();
+	private HashMap<InetAddress,Integer> ipAddressLog = new HashMap<InetAddress,Integer>();
+	private ArrayList<Long> timeQueue = new ArrayList<Long>();
+	private ArrayList<InetAddress> banList = new ArrayList<InetAddress>();
 	/**
 	 * @param rootDirectory
 	 * @param port
@@ -54,6 +62,8 @@ public class Server implements Runnable {
 		this.connections = 0;
 		this.serviceTime = 0;
 		this.window = window;
+		this.ipAddressQueue = new ArrayList<InetAddress>();
+		this.ipAddressLog = new HashMap<InetAddress,Integer>();
 	}
 
 	/**
@@ -124,6 +134,12 @@ public class Server implements Runnable {
 				// This method block until somebody makes a request
 				Socket connectionSocket = this.welcomeSocket.accept();
 				
+				if(banList.contains(connectionSocket.getInetAddress())){
+					break;
+				}
+				
+				addItemToIPAddressQueue(connectionSocket.getInetAddress());
+				
 				// Come out of the loop if the stop flag is set
 				if(this.stop)
 					break;
@@ -160,12 +176,59 @@ public class Server implements Runnable {
 	}
 	
 	/**
-	 * Checks if the server is stopeed or not.
+	 * Checks if the server is stopped or not.
 	 * @return
 	 */
 	public boolean isStoped() {
 		if(this.welcomeSocket != null)
 			return this.welcomeSocket.isClosed();
 		return true;
+	}
+	
+	private void addItemToIPAddressQueue(InetAddress address){
+		
+		//Gets time stamp of current action
+		long currentTime = System.nanoTime();
+		
+		//Adds the new item to the ip address queue
+		ipAddressQueue.add(address);
+		
+		//Adds the new item to the time mark queue
+		timeQueue.add(currentTime);
+		
+		//If the address is new within the last 200 logs
+		//we then add it to the hash map
+		//If it is not new, we increment the number of times
+		//we've logged it
+		if(ipAddressLog.containsKey(address)){
+			int i = ipAddressLog.get(address);
+			ipAddressLog.put(address, i++);
+		}else{
+			ipAddressLog.put(address, 1);
+		}
+		
+		//The queue will handle up to 200 items
+		if(ipAddressQueue.size()>200){
+			
+			//At 201 items, it will kick out the item at the zero position
+			InetAddress tempAddress = ipAddressQueue.get(0);
+			long tempTime = timeQueue.get(0);
+			ipAddressQueue.remove(0);
+			timeQueue.remove(0);
+			
+			//It will also decrement the hashmap accordingly
+			int j = ipAddressLog.get(tempAddress);
+			if(j == 1){
+				ipAddressLog.remove(tempAddress);
+			}else{
+				ipAddressLog.put(tempAddress, j--);
+			}
+			
+			//Checks now if there is a DoS attack.
+			if(currentTime - tempTime < dosAttackTimeMeasure &&
+					ipAddressLog.get(address) > 100){
+								banList.add(address);
+			}
+		}
 	}
 }
