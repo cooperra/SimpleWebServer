@@ -72,11 +72,9 @@ public class HttpResponseFactory {
 	private static HttpResponse createGETHEAD200OK(File file, String connection, boolean isHead) {
 		HttpResponse response;
 		if (isHead) {
-			response = new HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 
-				Protocol.OK_TEXT, new HashMap<String, String>(), null);
+			response = new Response200OK(Protocol.VERSION, new HashMap<String, String>(), null);
 		} else {
-			response = new HttpResponse(Protocol.VERSION, Protocol.OK_CODE, 
-					Protocol.OK_TEXT, new HashMap<String, String>(), file);
+			response = new Response200OK(Protocol.VERSION, new HashMap<String, String>(), file);
 		}
 		
 		// Lets fill up header fields with more information
@@ -110,8 +108,7 @@ public class HttpResponseFactory {
 			header.put("Location", location);
 		}
 		
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.CREATED_CODE, 
-				Protocol.CREATED_TEXT, header, null);
+		HttpResponse response = new Response201Created(Protocol.VERSION, header, null);
 		
 		// Lets fill up header fields with more information
 		fillGeneralHeader(response, connection);
@@ -120,8 +117,7 @@ public class HttpResponseFactory {
 	}
 	
 	public static HttpResponse create204NoContent(String connection) {
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.NO_CONTENT_CODE, 
-				Protocol.NO_CONTENT_TEXT, new HashMap<String, String>(), null);
+		HttpResponse response = new Response204NoContent(Protocol.VERSION, new HashMap<String, String>(), null);
 		
 		// Lets fill up header fields with more information
 		fillGeneralHeader(response, connection);
@@ -136,8 +132,7 @@ public class HttpResponseFactory {
 	 * @return A {@link HttpResponse} object represent 400 status.
 	 */
 	public static HttpResponse create400BadRequest(String connection) {
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.BAD_REQUEST_CODE, 
-				Protocol.BAD_REQUEST_TEXT, new HashMap<String, String>(), null);
+		HttpResponse response = new Response400BadRequest(Protocol.VERSION, new HashMap<String, String>(), null);
 		
 		// Lets fill up header fields with more information
 		fillGeneralHeader(response, connection);
@@ -152,8 +147,7 @@ public class HttpResponseFactory {
 	 * @return A {@link HttpResponse} object represent 404 status.
 	 */
 	public static HttpResponse create404NotFound(String connection) {
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.NOT_FOUND_CODE, 
-				Protocol.NOT_FOUND_TEXT, new HashMap<String, String>(), null);
+		HttpResponse response = new Response404NotFound(Protocol.VERSION, new HashMap<String, String>(), null);
 		
 		// Lets fill up the header fields with more information
 		fillGeneralHeader(response, connection);
@@ -168,8 +162,7 @@ public class HttpResponseFactory {
 	 * @return A {@link HttpResponse} object represent 404 status.
 	 */
 	public static HttpResponse create411LengthRequired(String connection) {
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.LENGTH_REQUIRED_CODE, 
-				Protocol.LENGTH_REQUIRED_TEXT, new HashMap<String, String>(), null);
+		HttpResponse response = new Response411LengthRequired(Protocol.VERSION, new HashMap<String, String>(), null);
 		
 		// Lets fill up the header fields with more information
 		fillGeneralHeader(response, connection);
@@ -206,8 +199,7 @@ public class HttpResponseFactory {
 	 * @return A {@link HttpResponse} object represent 501 status.
 	 */
 	public static HttpResponse create501NotImplemented(String connection) {
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.NOT_IMPLEMENTED_CODE, 
-				Protocol.NOT_IMPLEMENTED_TEXT, new HashMap<String, String>(), null);
+		HttpResponse response = new Response501NotImplemented(Protocol.VERSION, new HashMap<String, String>(), null);
 		
 		// Lets fill up header fields with more information
 		fillGeneralHeader(response, connection);
@@ -222,8 +214,7 @@ public class HttpResponseFactory {
 	 * @return A {@link HttpResponse} object represent 501 status.
 	 */
 	public static HttpResponse create500InternalServerError(String connection) {
-		HttpResponse response = new HttpResponse(Protocol.VERSION, Protocol.INTERNAL_SERVER_ERROR_CODE, 
-				Protocol.INTERNAL_SERVER_ERROR_TEXT, new HashMap<String, String>(), null);
+		HttpResponse response = new Response500InternalServerError(Protocol.VERSION, new HashMap<String, String>(), null);
 		
 		// Lets fill up header fields with more information
 		fillGeneralHeader(response, connection);
