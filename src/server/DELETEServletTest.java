@@ -36,4 +36,11 @@ public class DELETEServletTest implements ServletInterface{
 		return response;
 	}
 
+	/* (non-Javadoc)
+	 * @see server.ServletInterface#getServletID()
+	 */
+	public String getServletID() {
+		return "DELETEServletTest";
+	}
+
 }

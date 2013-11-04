@@ -10,4 +10,9 @@ public interface ServletInterface {
 	public HttpResponse makeResponse(HttpRequest request,
 			HttpResponse response, String rootDirectory, File file);
 
+	/**
+	 * @return
+	 */
+	public String getServletID();
+
 }
