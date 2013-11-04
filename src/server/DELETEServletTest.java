@@ -7,7 +7,7 @@ import protocol.HttpResponse;
 import protocol.HttpResponseFactory;
 import protocol.Protocol;
 
-public class DELETEServletTest {
+public class DELETEServletTest implements ServletInterface{
 
 	private String url = "/test/";
 	
@@ -16,7 +16,7 @@ public class DELETEServletTest {
 	}
 	
 	public HttpResponse makeResponse(HttpRequest request,
-			HttpResponse response, File file) {
+			HttpResponse response, String rootDirectory, File file) {
 		// Handling DELETE request here
 
 		

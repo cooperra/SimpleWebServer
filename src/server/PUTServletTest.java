@@ -10,7 +10,7 @@ import protocol.HttpResponse;
 import protocol.HttpResponseFactory;
 import protocol.Protocol;
 
-public class PUTServletTest {
+public class PUTServletTest implements ServletInterface{
 
 	private String url = "/test/";
 	
@@ -18,8 +18,7 @@ public class PUTServletTest {
 
 	}
 	
-	public HttpResponse makeResponse(HttpRequest request, HttpResponse response, File file)
-			throws IOException {
+	public HttpResponse makeResponse(HttpRequest request, HttpResponse response, String rootDirectory, File file) {
 		// Handling PUT request here
 		
 		boolean preexists = false;
@@ -36,7 +35,12 @@ public class PUTServletTest {
 				response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
 			} finally {
 				if (writer != null) {
-					writer.close();
+					try {
+						writer.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		} else {

@@ -11,7 +11,7 @@ import protocol.HttpResponse;
 import protocol.HttpResponseFactory;
 import protocol.Protocol;
 
-public class POSTServletTest {
+public class POSTServletTest implements ServletInterface{
 
 	private String url = "/test/";
 	
@@ -20,7 +20,7 @@ public class POSTServletTest {
 	}
 	
 	public HttpResponse makeResponse(HttpRequest request,
-			HttpResponse response, File file) throws IOException {
+			HttpResponse response, String rootDirectory, File file) {
 		// Handling POST request here
 
 		String uri = request.getUri();
@@ -34,7 +34,12 @@ public class POSTServletTest {
 				response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
 			} finally {
 				if (writer != null) {
-					writer.close();
+					try {
+						writer.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		} else {

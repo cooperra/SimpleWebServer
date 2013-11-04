@@ -7,7 +7,7 @@ import protocol.HttpResponse;
 import protocol.HttpResponseFactory;
 import protocol.Protocol;
 
-public class HEADServletTest {
+public class HEADServletTest implements ServletInterface{
 
 	private String url = "/test/";
 	
@@ -15,8 +15,7 @@ public class HEADServletTest {
 
 	}
 	
-	protected HttpResponse makeResponse(HttpRequest request, String rootDirectory, File file) {
-		HttpResponse response;
+	public HttpResponse makeResponse(HttpRequest request, HttpResponse response, String rootDirectory, File file) {
 		//				Map<String, String> header = request.getHeader();
 		//				String date = header.get("if-modified-since");
 		//				String hostName = header.get("host");
