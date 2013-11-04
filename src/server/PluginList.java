@@ -44,12 +44,17 @@ public class PluginList {
 		return plugins.containsKey(pluginID);
 	}
 	
-	public ServletInterface resolveURI(String URI) {
+	public ServletInterface resolveURI(String URI, String method) {
 		for (IPlugin plugin : plugins.values()) {
-			if (URI.equals(plugin.getURI())) {
+			if (URI.startsWith(plugin.getURI())) {
 				String restOfURI = URI.substring(plugin.getURI().length()); // TODO check for trailing slashes
-				for (String servletID : plugin.getServletIDs()) {
-					ServletInterface servlet = servletList.getServlet(servletID);
+				for (IPlugin.ServletMapping servletMapping : plugin.getServletMappings()) {
+					String servletMethod = servletMapping.getMethod();
+					String servletURI = servletMapping.getUri();
+					if (servletMethod.equalsIgnoreCase(method) && restOfURI.startsWith(servletURI)) {
+						ServletInterface servlet = servletList.getServlet(servletMapping.getServletID());
+						return servlet;
+					}
 				}
 			}
 		}
