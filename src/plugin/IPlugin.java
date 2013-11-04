@@ -43,4 +43,8 @@ public interface IPlugin {
 	String getPluginID();
 	List<String> getServletIDs();
 	List<ServletMapping> getServletMappings();
+	/**
+	 * @return
+	 */
+	public String getURI();
 }

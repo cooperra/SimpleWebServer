@@ -13,6 +13,11 @@ import plugin.IPlugin;
  */
 public class PluginList {
 	private Map<String, IPlugin> plugins = new HashMap<String, IPlugin>();
+	private ServletList servletList;
+	
+	public PluginList(Server server) {
+		this.servletList = server.servletList;
+	}
 
 	boolean addPlugin(IPlugin p) {
 		String pluginID = p.getPluginID();
@@ -37,5 +42,17 @@ public class PluginList {
 	
 	public boolean containsPlugin(String pluginID) {
 		return plugins.containsKey(pluginID);
+	}
+	
+	public ServletInterface resolveURI(String URI) {
+		for (IPlugin plugin : plugins.values()) {
+			if (URI.equals(plugin.getURI())) {
+				String restOfURI = URI.substring(plugin.getURI().length()); // TODO check for trailing slashes
+				for (String servletID : plugin.getServletIDs()) {
+					ServletInterface servlet = servletList.getServlet(servletID);
+				}
+			}
+		}
+		return null;
 	}
 }

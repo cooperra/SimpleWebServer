@@ -53,6 +53,9 @@ public class Server implements Runnable {
 	private HashMap<InetAddress,Integer> ipAddressLog = new HashMap<InetAddress,Integer>();
 	private ArrayList<Long> timeQueue = new ArrayList<Long>();
 	private ArrayList<InetAddress> banList = new ArrayList<InetAddress>();
+	protected ServletList servletList;
+	protected PluginList pluginList;
+
 	/**
 	 * @param rootDirectory
 	 * @param port
@@ -66,6 +69,8 @@ public class Server implements Runnable {
 		this.window = window;
 		this.ipAddressQueue = new ArrayList<InetAddress>();
 		this.ipAddressLog = new HashMap<InetAddress,Integer>();
+		this.servletList = new ServletList();
+		this.pluginList = new PluginList(this);
 	}
 
 	/**
