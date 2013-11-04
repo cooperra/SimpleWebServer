@@ -17,7 +17,7 @@ public class DirectoryWatcher {
     private final Map<WatchKey,Path> keys;
     private final boolean recursive;
     private boolean trace = false;
-    private static Path dir =  Paths.get("../SimpleWebServer/Servlets/");
+    private static Path dir;
     
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -25,7 +25,7 @@ public class DirectoryWatcher {
     }
     
     
-    public DirectoryWatcher(boolean recursive) throws IOException{
+    public DirectoryWatcher(Path dir, boolean recursive) throws IOException{
     	 this.watcher = FileSystems.getDefault().newWatchService();
          this.keys = new HashMap<WatchKey,Path>();
          this.recursive = recursive;
@@ -74,5 +74,10 @@ public class DirectoryWatcher {
         });
     }
     
+    void processEvents() {
+        for (;;) {
 
+    
+        }
+    }
 }
