@@ -15,11 +15,16 @@ public class DirectoryWatcher {
 	
     private final WatchService watcher;
     private final Map<WatchKey,Path> keys;
-    private final boolean recursive;
     private ServletLoader loader;
     private boolean trace = false;
     private Path dir;
+    private EventHandler handler;
     
+    public interface EventHandler {
+    	public void onCreate(Path p);
+    	public void onModify(Path p);
+    	public void onDelete(Path p);
+    }
     
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -27,11 +32,10 @@ public class DirectoryWatcher {
     }
     
     
-    public DirectoryWatcher(Path dir, boolean recursive, ServletLoader sv) throws IOException{
+    public DirectoryWatcher(Path dir, boolean recursive, EventHandler handler) throws IOException{
     	 this.watcher = FileSystems.getDefault().newWatchService();
          this.keys = new HashMap<WatchKey,Path>();
-         this.recursive = recursive;
-         this.loader = sv;
+         this.handler = handler;
          this.dir = dir;
 
          
@@ -105,7 +109,9 @@ public class DirectoryWatcher {
             		
             		WatchEvent<Path> ev = (WatchEvent<Path>)event;
                     Path filename = ev.context();
+                    Path absolutePath = dir.resolve(filename);
             	
+<<<<<<< HEAD
             	
             	if (kind == ENTRY_CREATE){
             		System.out.println(this.dir.toString());
@@ -129,6 +135,17 @@ public class DirectoryWatcher {
             		this.loader.deleteServlet(filename.getFileName().toString());
             		
             	}
+=======
+	            	if (kind == ENTRY_CREATE){
+	            		handler.onCreate(absolutePath);
+	            	}
+	            	else if (kind == ENTRY_MODIFY){
+	            		handler.onModify(absolutePath);
+	            	}
+	            	else if(kind == ENTRY_DELETE){
+	            		handler.onDelete(absolutePath);
+	            	}
+>>>>>>> 9a7a602bbc7c1cad2ae8b015db734d0900e63f45
             	}
             	
             }
