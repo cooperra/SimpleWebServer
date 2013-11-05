@@ -18,7 +18,7 @@ public class ServletClassLoader extends ClassLoader{
 	    public Class loadClass (String classname, boolean resolve) throws ClassNotFoundException {
 	   System.out.println(classname);
 	      try {
-
+	    	  System.out.println(directory);
 	        Class c = findLoadedClass(classname);
 
 	        if (c == null) {

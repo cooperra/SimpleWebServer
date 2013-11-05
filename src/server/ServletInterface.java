@@ -11,6 +11,10 @@ public interface ServletInterface {
 			HttpResponse response, String rootDirectory, File file);
 	
 	
-	public String getname(); //returns the name of the servlet
+
+	/**
+	 * @return
+	 */
+	public String getServletID();
 
 }

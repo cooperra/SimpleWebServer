@@ -51,9 +51,12 @@ public class HEADServletTest implements ServletInterface{
 		return response;
 	}
 
-	@Override
-	public String getname() {
-		// TODO Auto-generated method stub
+
+	/* (non-Javadoc)
+	 * @see server.ServletInterface#getServletID()
+	 */
+	public String getServletID() {
+
 		return "HEADServletTest";
 	}
 }

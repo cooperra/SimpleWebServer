@@ -322,6 +322,9 @@ public class ConnectionHandler implements Runnable {
 					response = HttpResponseFactory.create204NoContent(Protocol.CLOSE);
 				}
 			}
+			//// TODO remove the above stuff; uncomment below
+			//ServletInterface servlet = server.pluginList.resolveURI(uri, request.getMethod());
+			//response = servlet.makeResponse(request, response, rootDirectory, file);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
