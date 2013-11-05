@@ -126,7 +126,7 @@ public class DirectoryWatcher {
             	}
             	else if(kind == ENTRY_DELETE){
             		
-            		//delete the entry from the servletList
+            		this.loader.deleteServlet(filename.getFileName().toString());
             		
             	}
             	}

@@ -103,6 +103,7 @@ public class ServletLoader implements Runnable{
 					System.out.println("Got 1!!!");
 					
 					ServletInterface servlet = (ServletInterface) c.newInstance();
+				
 					loadServlet(servlet);
 				}
 				
@@ -127,6 +128,14 @@ public class ServletLoader implements Runnable{
 		this.list.addServlet(se);
 		return;
 	}
+	
+	public void deleteServlet(String filename){
+		
+		this.list.removeServlet(filename);
+		System.out.println(this.list.size());
+	}
+	
+	
 
 
 	@Override
