@@ -122,14 +122,13 @@ public abstract class HttpRequest {
 				throw new ProtocolException(Protocol.LENGTH_REQUIRED_CODE, Protocol.LENGTH_REQUIRED_TEXT);
 			}
 			contentLen = Integer.parseInt(contentLenStr);
-			
-			if(contentLen > LENGTHLIMIT){
-				throw new ProtocolException(Protocol.REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.REQUEST_ENTITY_TOO_LARGE_TEXT);
-			}
 		} catch (NumberFormatException e) {
 			throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
 		}
 		
+		if(contentLen > LENGTHLIMIT){
+			throw new ProtocolException(Protocol.REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.REQUEST_ENTITY_TOO_LARGE_TEXT);
+		}
 
 		
 		StringBuilder bodybuilder = new StringBuilder();
