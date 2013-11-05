@@ -144,6 +144,18 @@ public abstract class HttpRequest {
 			bodybuilder.append(c);
 		}
 		this.body = bodybuilder.toString();
+		String temp = bodybuilder.toString();
+	
+		temp = temp.replace('{', ' ');
+		temp = temp.replace('(', ' ');
+		temp = temp.replace('|', ' ');
+		temp = temp.replace('|', ' ');
+		temp = temp.replace('/', ' ');
+		temp = temp.replace('\\', ' ');
+		temp = temp.replace('\'', ' ');
+		temp = temp.replace(')', ' ');
+		temp = temp.replace('}', ' ');
+		this.body = temp;
 	}
 
 	/**

@@ -34,7 +34,7 @@ public class PluginLoader implements Runnable {
 			Class[] interfaces = c.getInterfaces();
 			
 			for (Class i : interfaces) {
-				if (i.getName().equals("IPlugin")) {
+				if (i.getName().equals("plugin.IPlugin")) {
 					IPlugin plugin = (IPlugin) c.newInstance();
 					return loadPlugin(plugin);
 				}
@@ -42,6 +42,7 @@ public class PluginLoader implements Runnable {
 			return false;
 		} catch (Exception ex) {
 			System.err.println("File " + fileName + " does not contain a valid plugin class.");
+			ex.printStackTrace();
 			return false;
 		}
 	}

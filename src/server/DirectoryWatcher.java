@@ -111,31 +111,8 @@ public class DirectoryWatcher {
                     Path filename = ev.context();
                     Path absolutePath = dir.resolve(filename);
             	
-<<<<<<< HEAD
-            	
-            	if (kind == ENTRY_CREATE){
-            		System.out.println(this.dir.toString());
-            		System.out.println(filename.getFileName().toString());
-            		String path = this.dir.toString() + "\\" + filename.getFileName().toString();
-            		System.out.println(path);
-            		
-            		this.loader.checkAndLoadSingleServlet(path);
-          
-            	
-            		
-            		
-        
-            	}
-            	else if (kind == ENTRY_MODIFY){
-            		
-            		System.out.println("Seeing a modify");
-            	}
-            	else if(kind == ENTRY_DELETE){
-            		
-            		this.loader.deleteServlet(filename.getFileName().toString());
-            		
-            	}
-=======
+
+
 	            	if (kind == ENTRY_CREATE){
 	            		handler.onCreate(absolutePath);
 	            	}
@@ -145,7 +122,7 @@ public class DirectoryWatcher {
 	            	else if(kind == ENTRY_DELETE){
 	            		handler.onDelete(absolutePath);
 	            	}
->>>>>>> 9a7a602bbc7c1cad2ae8b015db734d0900e63f45
+
             	}
             	
             }

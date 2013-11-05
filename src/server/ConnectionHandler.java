@@ -150,9 +150,6 @@ public class ConnectionHandler implements Runnable {
 		String rootDirectory = server.getRootDirectory();
 		// Combine them together to form absolute file path
 		File file = new File(rootDirectory + uri);
-		// Add a version with a time mark for cases where it's needed.
-		uri += new Date().getTime();
-		File timeMarkedFile = new File(rootDirectory + uri);
 		
 		try {
 			// Fill in the code to create a response for version mismatch.
@@ -162,7 +159,7 @@ public class ConnectionHandler implements Runnable {
 				// Here you checked that the "Protocol.VERSION" string is not equal to the  
 				// "request.version" string ignoring the case of the letters in both strings
 				response = HttpResponseFactory.create505NotSupported(Protocol.CLOSE);
-			}
+		/*	}
 			else if(request.getMethod().equalsIgnoreCase(Protocol.GET)) {
 				GETServletTest servlet = new GETServletTest();
 				response = servlet.makeResponse(request, rootDirectory, timeMarkedFile);
@@ -182,10 +179,18 @@ public class ConnectionHandler implements Runnable {
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.DELETE)) {
 				DELETEServletTest servlet = new DELETEServletTest();
 				response = servlet.makeResponse(request, rootDirectory, file);
+			}*/
 			}
 			//// TODO remove the above stuff; uncomment below
-			//ServletInterface servlet = server.pluginList.resolveURI(uri, request.getMethod());
-			//response = servlet.makeResponse(request, response, rootDirectory, file);
+			ServletInterface servlet = server.pluginList.resolveURI(uri, request.getMethod());
+			if( servlet == null){
+				response = HttpResponseFactory.create404NotFound(Protocol.CLOSE);
+			}else{
+			response = servlet.makeResponse(request, rootDirectory, file);
+			if(response == null){
+				response =  HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+			}
+		}
 		}
 		catch(Exception e) {
 			e.printStackTrace();

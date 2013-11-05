@@ -7,12 +7,12 @@ import java.util.List;
  * @author Robbie Cooper
  */
 public interface IPlugin {
-	class ServletMapping {
+	public class ServletMapping {
 		private String method;
 		private String uri;
 		private String servletID;
 
-		private ServletMapping(String method, String uri, String servletID) {
+		public ServletMapping(String method, String uri, String servletID) {
 			this.method = method;
 			this.uri = uri;
 			this.servletID = servletID;
