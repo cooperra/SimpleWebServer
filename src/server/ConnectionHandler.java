@@ -39,6 +39,7 @@ import protocol.HttpResponse;
 import protocol.HttpResponseFactory;
 import protocol.Protocol;
 import protocol.ProtocolException;
+import protocol.Response413RequestEntityTooLarge;
 
 /**
  * This class is responsible for handling a incoming request
@@ -115,6 +116,12 @@ public class ConnectionHandler implements Runnable {
 				response = HttpResponseFactory.create501NotImplemented(Protocol.CLOSE);
 			} else if (status == Protocol.LENGTH_REQUIRED_CODE) {
 				response = HttpResponseFactory.create411LengthRequired(Protocol.CLOSE);
+			} else if (status == Protocol.REQUEST_ENTITY_TOO_LARGE_CODE) {
+				response = HttpResponseFactory.create413RequestEntityTooLarge(Protocol.CLOSE);
+			} else {
+				// Unhandled protocol exception
+				pe.printStackTrace();
+				response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
 			}
 		}
 		catch(Exception e) {

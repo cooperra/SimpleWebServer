@@ -114,22 +114,22 @@ public abstract class HttpRequest {
 	 * @throws ProtocolException
 	 */
 	private void readBody(BufferedReader reader) throws ProtocolException {
-		int contentLen;
+		long contentLen;
 		try {
 			String contentLenStr = this.header.get("content-length");
 			if (contentLenStr == null) {
 				// use length required response code
 				throw new ProtocolException(Protocol.LENGTH_REQUIRED_CODE, Protocol.LENGTH_REQUIRED_TEXT);
 			}
-			contentLen = Integer.parseInt(contentLenStr);
-			
-			if(contentLen > 3){
-				throw new ProtocolException(Protocol.LENGTH_REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.LENGTH_REQUEST_ENTITY_TOO_LARGE_TEXT);
-			}
+			contentLen = Long.parseLong(contentLenStr);
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
 		}
 		
+		if(contentLen > LENGTHLIMIT){
+			throw new ProtocolException(Protocol.REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.REQUEST_ENTITY_TOO_LARGE_TEXT);
+		}
 
 		
 		StringBuilder bodybuilder = new StringBuilder();
