@@ -15,7 +15,7 @@ public class Response413RequestEntityTooLarge extends HttpResponse {
 		 * @param file
 		 */
 		public Response413RequestEntityTooLarge(String version, Map<String, String> header, File file) {
-			super(version, Protocol.REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.REQUEST_ENTITY_TOO_LARGE_TEXT, header, file);
+			super(version, Protocol.LENGTH_REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.LENGTH_REQUEST_ENTITY_TOO_LARGE_TEXT, header, file);
 		}
 
 }

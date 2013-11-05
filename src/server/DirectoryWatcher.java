@@ -111,6 +111,8 @@ public class DirectoryWatcher {
                     Path filename = ev.context();
                     Path absolutePath = dir.resolve(filename);
             	
+
+
 	            	if (kind == ENTRY_CREATE){
 	            		handler.onCreate(absolutePath);
 	            	}
@@ -120,6 +122,7 @@ public class DirectoryWatcher {
 	            	else if(kind == ENTRY_DELETE){
 	            		handler.onDelete(absolutePath);
 	            	}
+
             	}
             	
             }

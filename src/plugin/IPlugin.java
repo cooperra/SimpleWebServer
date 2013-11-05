@@ -12,7 +12,7 @@ public interface IPlugin {
 		private String uri;
 		private String servletID;
 
-		private ServletMapping(String method, String uri, String servletID) {
+		ServletMapping(String method, String uri, String servletID) {
 			this.method = method;
 			this.uri = uri;
 			this.servletID = servletID;
