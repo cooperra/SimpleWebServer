@@ -79,9 +79,12 @@ public class ServletLoader {
 		
 	}
 	
-	public void checkAndLoadSingleServlet(String filepath){
-		
+	public void checkAndLoadSingleServlet(String filepath) {
 		File file = new File(filepath);
+		checkAndLoadSingleServlet(file);
+	}
+	
+	public void checkAndLoadSingleServlet(File file){
 		
 	if(! file.exists()){
 		System.out.println("WHY?!");
