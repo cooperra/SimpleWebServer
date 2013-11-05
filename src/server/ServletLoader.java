@@ -24,7 +24,25 @@ public class ServletLoader implements Runnable{
 	
 	
 	private void ListenForDirectoryChanges() throws IOException{
-		this.watch = new DirectoryWatcher(directory, false, this);
+		this.watch = new DirectoryWatcher(directory, false, new DirectoryWatcher.EventHandler() {
+			
+			public void onModify(Path p) {
+				// TODO reload
+				System.out.println("Seeing a modify: " + p.toString());
+			}
+			
+			public void onDelete(Path p) {
+				// TODO unload
+				System.out.println("Seeing a delete: " + p.toString());
+			}
+			
+			public void onCreate(Path p) {
+				// load
+				System.out.println("Seeing a create: " + p.toString());
+				File file = p.toFile();
+        		checkAndLoadSingleServlet(file);
+			}
+		});
 		this.watch.processEvents();
 		
 		
@@ -79,9 +97,12 @@ public class ServletLoader implements Runnable{
 		
 	}
 	
-	public void checkAndLoadSingleServlet(String filepath){
-		
+	public void checkAndLoadSingleServlet(String filepath) {
 		File file = new File(filepath);
+		checkAndLoadSingleServlet(file);
+	}
+	
+	public void checkAndLoadSingleServlet(File file){
 		
 	if(! file.exists()){
 		System.out.println("WHY?!");
