@@ -118,6 +118,10 @@ public class ConnectionHandler implements Runnable {
 				response = HttpResponseFactory.create411LengthRequired(Protocol.CLOSE);
 			} else if (status == Protocol.REQUEST_ENTITY_TOO_LARGE_CODE) {
 				response = HttpResponseFactory.create413RequestEntityTooLarge(Protocol.CLOSE);
+			} else {
+				// Unhandled protocol exception
+				pe.printStackTrace();
+				response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
 			}
 		}
 		catch(Exception e) {
