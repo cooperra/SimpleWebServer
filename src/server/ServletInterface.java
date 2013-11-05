@@ -7,8 +7,7 @@ import protocol.HttpResponse;
 
 public interface ServletInterface {
 
-	public HttpResponse makeResponse(HttpRequest request,
-			HttpResponse response, String rootDirectory, File file);
+	public HttpResponse makeResponse(HttpRequest request, String rootDirectory, File file);
 
 	/**
 	 * @return

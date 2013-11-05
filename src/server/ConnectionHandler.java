@@ -165,23 +165,23 @@ public class ConnectionHandler implements Runnable {
 			}
 			else if(request.getMethod().equalsIgnoreCase(Protocol.GET)) {
 				GETServletTest servlet = new GETServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, timeMarkedFile);
+				response = servlet.makeResponse(request, rootDirectory, timeMarkedFile);
 				
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.HEAD)) {
 				HEADServletTest servlet = new HEADServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
+				response = servlet.makeResponse(request, rootDirectory, file);
 				
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.PUT)) {
 				PUTServletTest servlet = new PUTServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
+				response = servlet.makeResponse(request, rootDirectory, file);
 				
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.POST)) {
 				POSTServletTest servlet = new POSTServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
+				response = servlet.makeResponse(request, rootDirectory, file);
 				
 			} else if (request.getMethod().equalsIgnoreCase(Protocol.DELETE)) {
 				DELETEServletTest servlet = new DELETEServletTest();
-				response = servlet.makeResponse(request, response, rootDirectory, file);
+				response = servlet.makeResponse(request, rootDirectory, file);
 			}
 			//// TODO remove the above stuff; uncomment below
 			//ServletInterface servlet = server.pluginList.resolveURI(uri, request.getMethod());

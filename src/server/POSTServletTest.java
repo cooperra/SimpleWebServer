@@ -19,19 +19,19 @@ public class POSTServletTest implements ServletInterface{
 
 	}
 	
-	public HttpResponse makeResponse(HttpRequest request,
-			HttpResponse response, String rootDirectory, File file) {
+	public HttpResponse makeResponse(HttpRequest request, String rootDirectory, File file) {
 		// Handling POST request here
 
 		String uri = request.getUri();
 		
+		HttpResponse response = null;
 		if (file.getParentFile().exists() && file.getParentFile().isDirectory()) {
 			BufferedWriter writer = null;
 			try {
 				writer = new BufferedWriter( new FileWriter(file));
 				writer.write( request.getBody());
 			} catch (IOException e) {
-				response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+				response  = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
 			} finally {
 				if (writer != null) {
 					try {
