@@ -40,6 +40,7 @@ public abstract class HttpRequest {
 	private Map<String, String> header;
 	private String body;
 	private final long LENGTHLIMIT = 1000000000;
+	private char[] ILLEGAL_CHARS = {'[','[',']','{','}','(',')','"','\'','/'}; // for sanitizing
 	
 	private HttpRequest() {
 		this.header = new HashMap<String, String>();
@@ -141,7 +142,9 @@ public abstract class HttpRequest {
 				//TODO check that this is the right error code for too short content
 				throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
 			}
-			bodybuilder.append(c);
+			if (!isIllegal(c)) {
+				bodybuilder.append(c);
+			}
 		}
 		this.body = bodybuilder.toString();
 		String temp = bodybuilder.toString();
@@ -220,5 +223,18 @@ public abstract class HttpRequest {
 		}
 		buffer.append("----------------------------------\n");
 		return buffer.toString();
+	}
+	
+	/**
+	 * @param c
+	 * @return
+	 */
+	private boolean isIllegal(char c) {
+		for (char il : ILLEGAL_CHARS) {
+			if (c == il) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
