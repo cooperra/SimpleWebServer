@@ -15,7 +15,7 @@ public class GETServletTest implements ServletInterface{
 
 	}
 
-	public HttpResponse makeResponse(HttpRequest request, HttpResponse response, String rootDirectory, File file) {
+	public HttpResponse makeResponse(HttpRequest request,String rootDirectory, File file) {
 		//				Map<String, String> header = request.getHeader();
 		//				String date = header.get("if-modified-since");
 		//				String hostName = header.get("host");
@@ -24,6 +24,7 @@ public class GETServletTest implements ServletInterface{
 						// Get relative URI path from request
 						String uri = request.getUri();
 
+						HttpResponse response;
 						// Check if the file exists
 						if(file.exists()) {
 							if(file.isDirectory()) {

@@ -18,7 +18,7 @@ public class PUTServletTest implements ServletInterface{
 
 	}
 	
-	public HttpResponse makeResponse(HttpRequest request, HttpResponse response, String rootDirectory, File file) {
+	public HttpResponse makeResponse(HttpRequest request, String rootDirectory, File file) {
 		// Handling PUT request here
 		
 		boolean preexists = false;
@@ -26,13 +26,14 @@ public class PUTServletTest implements ServletInterface{
 			preexists = true;
 		}
 		
+		HttpResponse response = null;
 		if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
 			BufferedWriter writer = null;
 			try {
 				writer = new BufferedWriter( new FileWriter(file));
 				writer.write( request.getBody());
 			} catch (IOException e) {
-				response = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
+				response  = HttpResponseFactory.create500InternalServerError(Protocol.CLOSE);
 			} finally {
 				if (writer != null) {
 					try {
