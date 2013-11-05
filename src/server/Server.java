@@ -23,6 +23,7 @@ package server;
 
 import gui.WebServer;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -55,6 +56,7 @@ public class Server implements Runnable {
 	private ArrayList<InetAddress> banList = new ArrayList<InetAddress>();
 	protected ServletList servletList;
 	protected PluginList pluginList;
+	protected ServletLoader servletLoader;
 
 	/**
 	 * @param rootDirectory
@@ -70,6 +72,12 @@ public class Server implements Runnable {
 		this.ipAddressQueue = new ArrayList<InetAddress>();
 		this.ipAddressLog = new HashMap<InetAddress,Integer>();
 		this.servletList = new ServletList();
+		try {
+			this.servletLoader = new ServletLoader(this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.pluginList = new PluginList(this);
 	}
 
