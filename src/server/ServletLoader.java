@@ -11,20 +11,113 @@ import java.util.*;
 
 public class ServletLoader {
 	
-	public static final Path dir =  Paths.get("../SimpleWebServer/Servlets/");
+	public static final Path directory =  Paths.get("Servlets/");
+	public ServletList list;
 	private DirectoryWatcher watch;
 	
 	
-	public ServletLoader() throws IOException{
-		
-		this.watch = new DirectoryWatcher(dir, false);
+	public ServletLoader(Server server) throws IOException{
+		this.list = server.servletList;
+		initialServletLoad();
 	
 	}
 	
 	
-	private void ListenForDirectoryChanges(){
+	private void ListenForDirectoryChanges() throws IOException{
+		this.watch = new DirectoryWatcher(directory, false, this);
+		this.watch.processEvents();
 		
 		
+	}
+	
+	private void initialServletLoad(){
+	
+		File dir = new File(directory.toUri());
+		System.out.println(dir.toString());
+		File[] files = dir.listFiles();
+		ClassFileLoader cl = new ClassFileLoader();
+		for (File file : files) {
+			System.out.println(file.toString());
+			if(! file.getName().endsWith(".class")){
+				
+				continue;}
+			
+			try {
+				Class<?> c = cl.loadClassFromFile(file);
+				Class[] inter = c.getInterfaces();
+				
+				for (Class class1 : inter) {
+					System.out.println(class1.getName());
+					if(class1.getName().equals("server.ServletInterface")){
+						System.out.println("Got 1!!!");
+						
+						ServletInterface servlet = (ServletInterface) c.newInstance();
+						loadServlet(servlet);
+					}
+					
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+		}
+		try {
+			this.ListenForDirectoryChanges();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void checkAndLoadSingleServlet(File file){
+		
+		if(! file.getName().endsWith(".class")){
+			
+			return;}
+		
+		ClassFileLoader cl = new ClassFileLoader();
+		try {
+			
+			Class<?> c = cl.loadClassFromFile(file);
+			Class[] inter = c.getInterfaces();
+			
+			for (Class class1 : inter) {
+				System.out.println(class1.getName());
+				if(class1.getName().equals("server.ServletInterface")){
+					System.out.println("Got 1!!!");
+					
+					ServletInterface servlet = (ServletInterface) c.newInstance();
+					loadServlet(servlet);
+				}
+				
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	private void loadServlet(ServletInterface se){
+		this.list.addServlet(se);
+		return;
 	}
 	
 	

@@ -16,8 +16,9 @@ public class DirectoryWatcher {
     private final WatchService watcher;
     private final Map<WatchKey,Path> keys;
     private final boolean recursive;
+    private ServletLoader loader;
     private boolean trace = false;
-    private static Path dir;
+    private Path dir;
     
     
     @SuppressWarnings("unchecked")
@@ -26,10 +27,12 @@ public class DirectoryWatcher {
     }
     
     
-    public DirectoryWatcher(Path dir, boolean recursive) throws IOException{
+    public DirectoryWatcher(Path dir, boolean recursive, ServletLoader sv) throws IOException{
     	 this.watcher = FileSystems.getDefault().newWatchService();
          this.keys = new HashMap<WatchKey,Path>();
          this.recursive = recursive;
+         this.loader = sv;
+         this.dir = dir;
 
          
          if (recursive) {
@@ -105,8 +108,7 @@ public class DirectoryWatcher {
             	
             	
             	if (kind == ENTRY_CREATE){
-            		
-            		//send the file to Servlet Loader
+            	System.out.println(this.dir.toString());
             		
             	}
             	else if (kind == ENTRY_MODIFY){
