@@ -69,6 +69,9 @@ public class Protocol {
     public static final int LENGTH_REQUIRED_CODE = 411;
     public static final String LENGTH_REQUIRED_TEXT = "Length Required";
     
+    public static final int LENGTH_REQUEST_ENTITY_TOO_LARGE_CODE = 413;
+    public static final String LENGTH_REQUEST_ENTITY_TOO_LARGE_TEXT = "Request Entity Too Large";
+    
 	public static final int INTERNAL_SERVER_ERROR_CODE = 500;
 	public static final String INTERNAL_SERVER_ERROR_TEXT = "Internal Server Error";
     

@@ -39,6 +39,7 @@ public abstract class HttpRequest {
 	private String version;
 	private Map<String, String> header;
 	private String body;
+	private final long LENGTHLIMIT = 1000000000;
 	
 	private HttpRequest() {
 		this.header = new HashMap<String, String>();
@@ -121,9 +122,15 @@ public abstract class HttpRequest {
 				throw new ProtocolException(Protocol.LENGTH_REQUIRED_CODE, Protocol.LENGTH_REQUIRED_TEXT);
 			}
 			contentLen = Integer.parseInt(contentLenStr);
+			
+			if(contentLen > 3){
+				throw new ProtocolException(Protocol.LENGTH_REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.LENGTH_REQUEST_ENTITY_TOO_LARGE_TEXT);
+			}
 		} catch (NumberFormatException e) {
 			throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
 		}
+		
+
 		
 		StringBuilder bodybuilder = new StringBuilder();
 		for (int i = 0; i < contentLen; i++) {
