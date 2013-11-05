@@ -57,6 +57,7 @@ public class Server implements Runnable {
 	protected ServletList servletList;
 	protected PluginList pluginList;
 	protected ServletLoader servletLoader;
+	private PluginLoader pluginLoader;
 
 	/**
 	 * @param rootDirectory
@@ -81,6 +82,15 @@ public class Server implements Runnable {
 		}
 		new Thread(this.servletLoader).start();
 		this.pluginList = new PluginList(this);
+		try {
+			// Give the servlets a chance to load before the plugins do
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.pluginLoader = new PluginLoader(this);
+		new Thread(this.pluginLoader).start();
 	}
 
 	/**
