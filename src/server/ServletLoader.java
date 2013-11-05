@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ServletLoader {
 	
-	public static final Path directory =  Paths.get("Servlets/");
+	public static final Path directory =  Paths.get("Servlets/").toAbsolutePath();
 	public ServletList list;
 	private DirectoryWatcher watch;
 	
@@ -79,8 +79,14 @@ public class ServletLoader {
 		
 	}
 	
-	public void checkAndLoadSingleServlet(File file){
+	public void checkAndLoadSingleServlet(String filepath){
 		
+		File file = new File(filepath);
+		
+	if(! file.exists()){
+		System.out.println("WHY?!");
+		return;
+	}
 		if(! file.getName().endsWith(".class")){
 			
 			return;}
@@ -111,6 +117,8 @@ public class ServletLoader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println(this.list.size());
 		
 		
 	}

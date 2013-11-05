@@ -20,6 +20,10 @@ public class ServletList {
 		return true;
 	}
 	
+	int size(){
+		return servlets.size();
+	}
+	
 	boolean removeServlet(String servletID) {
 		if (servlets.containsKey(servletID)) {
 			return false; // can't remove if Servlet isn't here

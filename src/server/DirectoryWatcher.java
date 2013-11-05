@@ -108,12 +108,21 @@ public class DirectoryWatcher {
             	
             	
             	if (kind == ENTRY_CREATE){
-            	System.out.println(this.dir.toString());
+            		System.out.println(this.dir.toString());
+            		System.out.println(filename.getFileName().toString());
+            		String path = this.dir.toString() + "\\" + filename.getFileName().toString();
+            		System.out.println(path);
             		
+            		this.loader.checkAndLoadSingleServlet(path);
+          
+            	
+            		
+            		
+        
             	}
             	else if (kind == ENTRY_MODIFY){
             		
-            		//modify the entry in ServletList
+            		System.out.println("Seeing a modify");
             	}
             	else if(kind == ENTRY_DELETE){
             		
