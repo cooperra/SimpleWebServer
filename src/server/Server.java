@@ -73,11 +73,13 @@ public class Server implements Runnable {
 		this.ipAddressLog = new HashMap<InetAddress,Integer>();
 		this.servletList = new ServletList();
 		try {
+			
 			this.servletLoader = new ServletLoader(this);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		new Thread(this.servletLoader).start();
 		this.pluginList = new PluginList(this);
 	}
 

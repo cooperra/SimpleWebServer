@@ -9,7 +9,7 @@ import java.nio.file.attribute.*;
 import java.io.*;
 import java.util.*;
 
-public class ServletLoader {
+public class ServletLoader implements Runnable{
 	
 	public static final Path directory =  Paths.get("Servlets/").toAbsolutePath();
 	public ServletList list;
@@ -18,7 +18,7 @@ public class ServletLoader {
 	
 	public ServletLoader(Server server) throws IOException{
 		this.list = server.servletList;
-		initialServletLoad();
+		
 	
 	}
 	
@@ -126,6 +126,13 @@ public class ServletLoader {
 	private void loadServlet(ServletInterface se){
 		this.list.addServlet(se);
 		return;
+	}
+
+
+	@Override
+	public void run() {
+		initialServletLoad();
+		
 	}
 	
 	
