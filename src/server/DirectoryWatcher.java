@@ -15,11 +15,16 @@ public class DirectoryWatcher {
 	
     private final WatchService watcher;
     private final Map<WatchKey,Path> keys;
-    private final boolean recursive;
     private ServletLoader loader;
     private boolean trace = false;
     private Path dir;
+    private EventHandler handler;
     
+    public interface EventHandler {
+    	public void onCreate(Path p);
+    	public void onModify(Path p);
+    	public void onDelete(Path p);
+    }
     
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -27,11 +32,10 @@ public class DirectoryWatcher {
     }
     
     
-    public DirectoryWatcher(Path dir, boolean recursive, ServletLoader sv) throws IOException{
+    public DirectoryWatcher(Path dir, boolean recursive, EventHandler handler) throws IOException{
     	 this.watcher = FileSystems.getDefault().newWatchService();
          this.keys = new HashMap<WatchKey,Path>();
-         this.recursive = recursive;
-         this.loader = sv;
+         this.handler = handler;
          this.dir = dir;
 
          
@@ -105,30 +109,17 @@ public class DirectoryWatcher {
             		
             		WatchEvent<Path> ev = (WatchEvent<Path>)event;
                     Path filename = ev.context();
+                    Path absolutePath = dir.resolve(filename);
             	
-            	
-            	if (kind == ENTRY_CREATE){
-            		System.out.println(this.dir.toString());
-            		System.out.println(filename.getFileName().toString());
-            		String path = this.dir.toString() + "\\" + filename.getFileName().toString();
-            		System.out.println(path);
-            		
-            		this.loader.checkAndLoadSingleServlet(path);
-          
-            	
-            		
-            		
-        
-            	}
-            	else if (kind == ENTRY_MODIFY){
-            		
-            		System.out.println("Seeing a modify");
-            	}
-            	else if(kind == ENTRY_DELETE){
-            		
-            		//delete the entry from the servletList
-            		
-            	}
+	            	if (kind == ENTRY_CREATE){
+	            		handler.onCreate(absolutePath);
+	            	}
+	            	else if (kind == ENTRY_MODIFY){
+	            		handler.onModify(absolutePath);
+	            	}
+	            	else if(kind == ENTRY_DELETE){
+	            		handler.onDelete(absolutePath);
+	            	}
             	}
             	
             }
