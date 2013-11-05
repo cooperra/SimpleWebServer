@@ -123,7 +123,7 @@ public abstract class HttpRequest {
 			}
 			contentLen = Integer.parseInt(contentLenStr);
 			
-			if(contentLen > 3){
+			if(contentLen > LENGTHLIMIT){
 				throw new ProtocolException(Protocol.REQUEST_ENTITY_TOO_LARGE_CODE, Protocol.REQUEST_ENTITY_TOO_LARGE_TEXT);
 			}
 		} catch (NumberFormatException e) {
