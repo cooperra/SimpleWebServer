@@ -114,15 +114,16 @@ public abstract class HttpRequest {
 	 * @throws ProtocolException
 	 */
 	private void readBody(BufferedReader reader) throws ProtocolException {
-		int contentLen;
+		long contentLen;
 		try {
 			String contentLenStr = this.header.get("content-length");
 			if (contentLenStr == null) {
 				// use length required response code
 				throw new ProtocolException(Protocol.LENGTH_REQUIRED_CODE, Protocol.LENGTH_REQUIRED_TEXT);
 			}
-			contentLen = Integer.parseInt(contentLenStr);
+			contentLen = Long.parseLong(contentLenStr);
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			throw new ProtocolException(Protocol.BAD_REQUEST_CODE, Protocol.BAD_REQUEST_TEXT);
 		}
 		
