@@ -39,8 +39,20 @@ public class ServletLoader implements Runnable{
 			public void onCreate(Path p) {
 				// load
 				System.out.println("Seeing a create: " + p.toString());
+				try {
+					// program likes to read files while they're being written
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				File file = p.toFile();
-        		checkAndLoadSingleServlet(file);
+				try {
+					checkAndLoadSingleServlet(file);
+				} catch (java.lang.ClassFormatError e) {
+					System.err.println("This error is likely caused by loading a file that already exists or reading a Servlet while its being written. Ignoring.");
+					e.printStackTrace();
+				}
 			}
 		});
 		this.watch.processEvents();
